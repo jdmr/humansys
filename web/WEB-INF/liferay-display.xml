@@ -3,5 +3,6 @@
 <display>
   <category name="SistemasHumanos">
     <portlet id="Cursos">Cursos</portlet>
+    <portlet id="Usuarios">Usuarios</portlet>
   </category>
 </display>

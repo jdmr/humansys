@@ -39,7 +39,7 @@ import org.springframework.web.portlet.bind.PortletRequestDataBinder;
 @SessionAttributes("curso,periodo")
 public class CursoPortlet {
 
-    private static final Log log = LogFactory.getLog(CursoController.class);
+    private static final Log log = LogFactory.getLog(CursoPortlet.class);
     @Autowired
     private CursoDao cursoDao;
     @Autowired

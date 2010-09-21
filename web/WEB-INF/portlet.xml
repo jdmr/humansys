@@ -24,4 +24,24 @@
             <short-title>Cursos</short-title>
         </portlet-info>
     </portlet>
+    <portlet>
+        <description>Usuarios</description>
+        <portlet-name>Usuarios</portlet-name>
+        <display-name>Usuarios</display-name>
+        <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+        <init-param>
+            <name>contextConfigLocation</name>
+            <value>/WEB-INF/context/portlet/usuarios.xml</value>
+        </init-param>
+        <expiration-cache>60</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+        </supports>
+        <resource-bundle>messages</resource-bundle>
+        <portlet-info>
+            <title>Usuarios</title>
+            <short-title>Usuarios</short-title>
+        </portlet-info>
+    </portlet>
 </portlet-app>
