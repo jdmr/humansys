@@ -113,7 +113,7 @@ public class Periodo implements java.io.Serializable {
     public String toString() {
         SimpleDateFormat sdfDia = new SimpleDateFormat("EEEE");
         SimpleDateFormat sdfHora = new SimpleDateFormat("HH:mm");
-        return sdfDia.format(dia)+" ["+sdfHora.format(inicio)+" - "+sdfHora.format(fin)+"]";
+        return sdfDia.format(dia)+" ["+sdfHora.format(inicio)+" - "+sdfHora.format(fin)+"] " + curso;
     }
 
 }

@@ -2,6 +2,7 @@ package mx.edu.um.cursos.modelo;
 
 import java.util.Date;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,7 +37,7 @@ public class Curso implements java.io.Serializable {
     private Date fechaInicio;
     @Temporal(javax.persistence.TemporalType.DATE)
     private Date fechaFinal;
-    @OneToMany(mappedBy="curso")
+    @OneToMany(mappedBy="curso", cascade=CascadeType.REMOVE)
     private Set<Periodo> periodos;
     private Long comunidadId;
     @Column(length=128)
@@ -182,6 +183,6 @@ public class Curso implements java.io.Serializable {
 
     @Override
     public String toString() {
-        return "Curso["+nombre+"]";
+        return nombre;
     }
 }

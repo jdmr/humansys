@@ -2,7 +2,9 @@
 <portlet-app 
     xmlns='http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd'
     xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
-    xsi:schemaLocation='http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd'
+    xsi:schemaLocation='
+        http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd
+        http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd'
     version='2.0'>
     <portlet>
         <description>Cursos</description>
@@ -18,12 +20,13 @@
             <mime-type>text/html</mime-type>
             <portlet-mode>VIEW</portlet-mode>
         </supports>
-        <resource-bundle>messages</resource-bundle>
+        <resource-bundle>cursos</resource-bundle>
         <portlet-info>
             <title>Cursos</title>
             <short-title>Cursos</short-title>
         </portlet-info>
     </portlet>
+
     <portlet>
         <description>Usuarios</description>
         <portlet-name>Usuarios</portlet-name>
@@ -38,10 +41,33 @@
             <mime-type>text/html</mime-type>
             <portlet-mode>VIEW</portlet-mode>
         </supports>
-        <resource-bundle>messages</resource-bundle>
+        <resource-bundle>usuarios</resource-bundle>
         <portlet-info>
             <title>Usuarios</title>
             <short-title>Usuarios</short-title>
         </portlet-info>
     </portlet>
+
+    <portlet>
+        <description>Registro</description>
+        <portlet-name>Registro</portlet-name>
+        <display-name>Registro</display-name>
+        <portlet-class>org.springframework.web.portlet.DispatcherPortlet</portlet-class>
+        <init-param>
+            <name>contextConfigLocation</name>
+            <value>/WEB-INF/context/portlet/registro.xml</value>
+        </init-param>
+        <expiration-cache>60</expiration-cache>
+        <supports>
+            <mime-type>text/html</mime-type>
+            <portlet-mode>VIEW</portlet-mode>
+            <portlet-mode>EDIT</portlet-mode>
+        </supports>
+        <resource-bundle>registro</resource-bundle>
+        <portlet-info>
+            <title>Registro</title>
+            <short-title>Registro</short-title>
+        </portlet-info>
+    </portlet>
+
 </portlet-app>

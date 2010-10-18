@@ -9,6 +9,10 @@
     <portlet-name>Usuarios</portlet-name>
     <instanceable>false</instanceable>
   </portlet>
+  <portlet>
+    <portlet-name>Registro</portlet-name>
+    <instanceable>false</instanceable>
+  </portlet>
   <role-mapper>
     <role-name>guest</role-name>
     <role-link>Guest</role-link>

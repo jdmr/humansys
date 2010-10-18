@@ -75,7 +75,7 @@ public class CursoDaoImpl implements CursoDao {
     }
 
     public void creaPeriodo(Periodo periodo) {
-        log.debug("Creando el periodo "+periodo);
+        log.debug("Creando el periodo "+periodo+" para el curso "+ periodo.getCurso());
         Curso curso = periodo.getCurso();
         hibernateTemplate.refresh(curso);
         hibernateTemplate.save(periodo);

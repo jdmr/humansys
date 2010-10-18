@@ -2,12 +2,19 @@ package mx.edu.um.portlets;
 
 import com.liferay.portal.PortalException;
 import com.liferay.portal.SystemException;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -16,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
 import javax.sql.DataSource;
 import mx.edu.um.cursos.dao.CursoDao;
 import mx.edu.um.cursos.modelo.Curso;
@@ -79,7 +87,7 @@ public class CursoPortlet {
     }
 
     @RequestMapping(params = "action=nuevoCurso")
-    public String nuevoCurso(Model model) {
+    public String nuevoCurso(RenderRequest request, Model model) throws SystemException {
         log.debug("Nuevo curso");
         Calendar cal = Calendar.getInstance();
         Curso curso = new Curso();
@@ -87,7 +95,7 @@ public class CursoPortlet {
         cal.add(Calendar.MONTH, 1);
         curso.setFechaFinal(cal.getTime());
         model.addAttribute("curso", curso);
-        model.addAttribute("comunidades", obtieneComunidades());
+        model.addAttribute("comunidades", obtieneComunidades(request));
 
         return "nuevoCurso";
     }
@@ -102,10 +110,10 @@ public class CursoPortlet {
     }
 
     @RequestMapping(params = "action=editaCurso")
-    public String editaCurso(@RequestParam("curso") Long id, Model model) {
+    public String editaCurso(RenderRequest request, @RequestParam("curso") Long id, Model model) throws SystemException {
         log.debug("Edita curso");
         model.addAttribute("curso", cursoDao.obtiene(id));
-        model.addAttribute("comunidades", obtieneComunidades());
+        model.addAttribute("comunidades", obtieneComunidades(request));
         return "editaCurso";
     }
 
@@ -119,10 +127,10 @@ public class CursoPortlet {
     }
 
     @RequestMapping(params = "action=editaPeriodo")
-    public String editaPeriodo(Model model) {
+    public String editaPeriodo(RenderRequest request, @RequestParam("curso") Long id, Model model) {
         log.debug("Creando periodo");
         System.out.println("Creando periodo");
-        Curso curso = cursoDao.obtiene(1L);
+        Curso curso = cursoDao.obtiene(id);
         Periodo periodo = new Periodo();
         periodo.setCurso(curso);
         Date date = new Date();
@@ -179,8 +187,13 @@ public class CursoPortlet {
     }
 
     @RequestMapping(params = "action=nuevoPeriodo")
-    public String nuevoPeriodo(@RequestParam("curso") Long id, Model model) {
+    public String nuevoPeriodo(RenderRequest request, @RequestParam("curso") Long id, Model model) {
         log.debug("Nuevo periodo");
+        Curso curso = cursoDao.obtiene(new Long(id));
+        Periodo periodo = new Periodo();
+        periodo.setCurso(curso);
+        model.addAttribute("curso", curso);
+        model.addAttribute("periodo",periodo);
         return "nuevoPeriodo";
     }
 
@@ -239,21 +252,38 @@ public class CursoPortlet {
         return "usuarioDesconocido";
     }
 
-    private Map<Long, String> obtieneComunidades() {
-        Connection conn;
-        Statement stmt;
-        ResultSet rs;
+    private Map<Long, String> obtieneComunidades(RenderRequest request) throws SystemException {
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        List types = new ArrayList();
+
+        types.add(new Integer(GroupConstants.TYPE_COMMUNITY_OPEN));
+        types.add(new Integer(GroupConstants.TYPE_COMMUNITY_RESTRICTED));
+        types.add(new Integer(GroupConstants.TYPE_COMMUNITY_PRIVATE));
+
+        LinkedHashMap groupParams = new LinkedHashMap();
+        groupParams.put("types", types);
+        groupParams.put("active", Boolean.TRUE);
+
+        List<Group> comunidadesList = GroupLocalServiceUtil.search(themeDisplay.getCompanyId(), null, null, groupParams, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
         Map<Long, String> comunidades = new LinkedHashMap<Long, String>();
-        try {
-            conn = dataSource.getConnection();
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("select c.groupId, c.name from Group_ c where c.type_ = 1 and c.companyId = 24988 and c.groupId != 25008");
-            while (rs.next()) {
-                comunidades.put(rs.getLong("groupId"), rs.getString("name"));
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Tuvimos algun problema al intentar conseguir las comunidades", e);
+        for(Group group : comunidadesList) {
+            comunidades.put(group.getGroupId(), group.getName());
         }
+
+//        Connection conn;
+//        Statement stmt;
+//        ResultSet rs;
+//        Map<Long, String> comunidades = new LinkedHashMap<Long, String>();
+//        try {
+//            conn = dataSource.getConnection();
+//            stmt = conn.createStatement();
+//            rs = stmt.executeQuery("select c.groupId, c.name from Group_ c where c.type_ = 1 and c.companyId = 24988 and c.groupId != 25008");
+//            while (rs.next()) {
+//                comunidades.put(rs.getLong("groupId"), rs.getString("name"));
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException("Tuvimos algun problema al intentar conseguir las comunidades", e);
+//        }
 
         return comunidades;
     }

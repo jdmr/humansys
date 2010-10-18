@@ -16,6 +16,8 @@
 
                         <th>Curso</th>
 
+                        <th>Comunidad</th>
+
                     </tr>
                 </thead>
                 <tbody>
@@ -28,6 +30,8 @@
 
                             <td><fmt:formatDate value="${periodo.fin}" pattern="HH:mm" /></td>
                             
+                            <td>${periodo.curso}</td>
+
                             <td>${periodo.curso.comunidadNombre}</td>
 
                         </tr>
