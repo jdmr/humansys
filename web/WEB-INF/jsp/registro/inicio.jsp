@@ -12,7 +12,7 @@
 <liferay-theme:defineObjects />
 
 <div class="summary-container">
-    <h2>Bienvenido a la comunidad ${comunidad.descriptiveName}</h2>
+    <h2>Bienvenido a este espacio</h2>
     <c:choose>
         <c:when test="${pertenece}">
             <portlet:actionURL var="actionUrl" >
@@ -20,13 +20,13 @@
                 <portlet:param name="cursoId" value="${curso.id}" />
             </portlet:actionURL>
 
-            <p><a href="${actionUrl}">Entrar al curso ${curso.nombre}</a></p>
+            <p><a href="${actionUrl}">Entrar a la sesión en vivo</a></p>
         </c:when>
         <c:when test="${sign_in}">
-            <p><a href="${sign_in_url}">Acceder</a></p>
+            <p><a href="${sign_in_url}">Regístrate a SG Campus</a></p>
         </c:when>
         <c:when test="${enviado}">
-            <p>Su petición ha sido enviada, gracias...</p>
+            <p>Tu petición ha sido enviada al administrador, recibirás una notificación por correo electrónico.</p>
         </c:when>
         <c:when test="${publico}">
             <%
@@ -47,7 +47,7 @@
             </p>
         </c:when>
         <c:otherwise>
-            <p><a class="save" href="<portlet:renderURL><portlet:param name="action" value="unirse"/></portlet:renderURL>">Unirse</a></p>
+            <p><a class="save" href="<portlet:renderURL><portlet:param name="action" value="unirse"/></portlet:renderURL>">Únete a este espacio de aprendizaje</a></p>
         </c:otherwise>
     </c:choose>
 </div>
