@@ -270,21 +270,6 @@ public class CursoPortlet {
             comunidades.put(group.getGroupId(), group.getName());
         }
 
-//        Connection conn;
-//        Statement stmt;
-//        ResultSet rs;
-//        Map<Long, String> comunidades = new LinkedHashMap<Long, String>();
-//        try {
-//            conn = dataSource.getConnection();
-//            stmt = conn.createStatement();
-//            rs = stmt.executeQuery("select c.groupId, c.name from Group_ c where c.type_ = 1 and c.companyId = 24988 and c.groupId != 25008");
-//            while (rs.next()) {
-//                comunidades.put(rs.getLong("groupId"), rs.getString("name"));
-//            }
-//        } catch (Exception e) {
-//            throw new RuntimeException("Tuvimos algun problema al intentar conseguir las comunidades", e);
-//        }
-
         return comunidades;
     }
 

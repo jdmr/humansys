@@ -1,12 +1,22 @@
 package mx.edu.um.portlets;
 
+import com.liferay.portal.SystemException;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
+import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.RenderRequest;
 import javax.sql.DataSource;
 import mx.edu.um.cursos.modelo.Curso;
 import org.apache.commons.logging.Log;
@@ -40,8 +50,8 @@ public class UsuarioPortlet {
     }
 
     @RequestMapping
-    public String inicio(Model model) {
-        model.addAttribute("comunidades", obtieneComunidades());
+    public String inicio(RenderRequest request, Model model) throws SystemException {
+        model.addAttribute("comunidades", obtieneComunidades(request));
         return "usuarios";
     }
 
@@ -65,20 +75,22 @@ public class UsuarioPortlet {
         model.addAttribute("usuarios", sb.toString());
     }
 
-    private Map<Long, String> obtieneComunidades() {
-        Connection conn;
-        Statement stmt;
-        ResultSet rs;
+    private Map<Long, String> obtieneComunidades(RenderRequest request) throws SystemException {
+        ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+        List types = new ArrayList();
+
+        types.add(new Integer(GroupConstants.TYPE_COMMUNITY_OPEN));
+        types.add(new Integer(GroupConstants.TYPE_COMMUNITY_RESTRICTED));
+        types.add(new Integer(GroupConstants.TYPE_COMMUNITY_PRIVATE));
+
+        LinkedHashMap groupParams = new LinkedHashMap();
+        groupParams.put("types", types);
+        groupParams.put("active", Boolean.TRUE);
+
+        List<Group> comunidadesList = GroupLocalServiceUtil.search(themeDisplay.getCompanyId(), null, null, groupParams, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
         Map<Long, String> comunidades = new LinkedHashMap<Long, String>();
-        try {
-            conn = dataSource.getConnection();
-            stmt = conn.createStatement();
-            rs = stmt.executeQuery("select c.groupId, c.name from Group_ c where c.type_ = 1 and c.companyId = 24988 and c.groupId != 25008");
-            while (rs.next()) {
-                comunidades.put(rs.getLong("groupId"), rs.getString("name"));
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Tuvimos algun problema al intentar conseguir las comunidades", e);
+        for(Group group : comunidadesList) {
+            comunidades.put(group.getGroupId(), group.getName());
         }
 
         return comunidades;
@@ -130,4 +142,5 @@ public class UsuarioPortlet {
         }
         return sb.toString();
     }
+
 }
